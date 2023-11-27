@@ -20,28 +20,30 @@ class LocalNotificationServices {
   showNotification() async {
     print("Showing Notification");
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-        '0', 'incoming_call',
-        channelDescription: 'For incoming calls',
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker',
-        enableVibration: true,
-        playSound: true,
-        ongoing: true,
-        autoCancel: false,
-        sound: UriAndroidNotificationSound("ringtones/IncomingCall.mp3"),
-        actions: [
-          AndroidNotificationAction(
-            'accept',
-            'Accept',
-            titleColor: Colors.green,
-          ),
-          AndroidNotificationAction(
-            'decline',
-            'Decline',
-            titleColor: Colors.red,
-          )
-        ]);
+      '0',
+      'incoming_call',
+      channelDescription: 'For incoming calls',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+      enableVibration: true,
+      playSound: true,
+      ongoing: true,
+      autoCancel: false,
+      sound: UriAndroidNotificationSound("ringtones/IncomingCall.mp3"),
+      actions: [
+        AndroidNotificationAction(
+          'accept',
+          'Accept',
+          titleColor: Colors.green,
+        ),
+        AndroidNotificationAction(
+          'decline',
+          'Decline',
+          titleColor: Colors.red,
+        )
+      ],
+    );
 
     var iOSPlatformChannelSpecifics = const DarwinNotificationDetails(
       badgeNumber: 0,
