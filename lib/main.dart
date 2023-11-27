@@ -1,5 +1,7 @@
 // // ignore_for_file: avoid_print, constant_identifier_names
 
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:io';
 
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 int id = 0;
+const String darwinNotificationCategoryPlain = 'plainCategory';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -38,15 +41,25 @@ String? selectedNotificationPayload;
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-  // ignore: avoid_print
   print('notification(${notificationResponse.id}) action tapped: '
       '${notificationResponse.actionId} with'
       ' payload: ${notificationResponse.payload}');
   if (notificationResponse.input?.isNotEmpty ?? false) {
-    // ignore: avoid_print
     print(
         'notification action tapped with input: ${notificationResponse.input}');
   }
+}
+
+void onDidReceiveNotificationResponse(
+    NotificationResponse notificationResponse) async {
+  final String? payload = notificationResponse.payload;
+  if (notificationResponse.payload != null) {
+    debugPrint('notification payload: $payload');
+  }
+  // await Navigator.push(
+  //   context,
+  //   MaterialPageRoute<void>(builder: (context) => SecondScreen(payload)),
+  // );
 }
 
 Future<void> main() async {
@@ -71,16 +84,20 @@ Future<void> main() async {
     DarwinNotificationCategory(
       "calls",
       actions: <DarwinNotificationAction>[
-        DarwinNotificationAction.plain(
+        DarwinNotificationAction.text(
           'accept',
           'Accept',
+          buttonTitle: 'Accept',
+          placeholder: "Placeholder",
           options: <DarwinNotificationActionOption>{
             DarwinNotificationActionOption.foreground,
           },
         ),
-        DarwinNotificationAction.plain(
+        DarwinNotificationAction.text(
           'decline',
           'Decline',
+          buttonTitle: 'Decline',
+          placeholder: "Placeholder",
           options: <DarwinNotificationActionOption>{
             DarwinNotificationActionOption.destructive,
           },
@@ -94,7 +111,7 @@ Future<void> main() async {
 
   final DarwinInitializationSettings initializationSettingsDarwin =
       DarwinInitializationSettings(
-    requestAlertPermission: false,
+    requestAlertPermission: true,
     requestBadgePermission: false,
     requestSoundPermission: false,
     onDidReceiveLocalNotification:
@@ -111,18 +128,38 @@ Future<void> main() async {
     notificationCategories: darwinNotificationCategories,
   );
 
-  if (Platform.isAndroid) {
+  if (Platform.isAndroid == true) {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
   }
+  if (Platform.isIOS) {
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+          critical: true,
+        );
+  }
+
   final InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
     iOS: initializationSettingsDarwin,
   );
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse:
+        (NotificationResponse notificationResponse,) async {
+      print("Hello here");
+      onDidReceiveNotificationResponse(notificationResponse);
+    },
+    onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+  );
 
   runApp(const TestApp());
 }
@@ -147,8 +184,10 @@ class _TestAppState extends State<TestApp> {
         ),
         body: Center(
           child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+            ),
             onPressed: () {
-              // LocalNotificationServices().showNotification();
               LocalNotificationServices().scheduleNotification();
             },
             child: const Text('Schedule Notification'),

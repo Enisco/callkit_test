@@ -28,6 +28,7 @@ class LocalNotificationServices {
         playSound: true,
         ongoing: true,
         autoCancel: false,
+        sound: RawResourceAndroidNotificationSound('slow_spring_board'),
         actions: [
           AndroidNotificationAction(
             'accept',
@@ -43,6 +44,7 @@ class LocalNotificationServices {
     var iOSPlatformChannelSpecifics = const DarwinNotificationDetails(
       badgeNumber: 0,
       presentSound: true,
+      sound: 'slow_spring_board.aiff',
     );
     var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -66,5 +68,7 @@ class LocalNotificationServices {
     // Cancel the notification after 1 minute
     await flutterLocalNotificationsPlugin
         .cancel(0); // Cancel notification with ID 0
+
+    print("Closed notification");
   }
 }
