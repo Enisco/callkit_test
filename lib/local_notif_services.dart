@@ -29,13 +29,13 @@ class LocalNotificationServices {
         playSound: true,
         ongoing: true,
         autoCancel: false,
-        sound: RawResourceAndroidNotificationSound('slow_spring_board'),
+        sound: UriAndroidNotificationSound("ringtones/IncomingCall.mp3"),
         actions: [
           AndroidNotificationAction(
             'accept',
             'Accept',
             titleColor: Colors.green,
-          ), 
+          ),
           AndroidNotificationAction(
             'decline',
             'Decline',
