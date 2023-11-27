@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable, avoid_print
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:callkit_test/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -30,7 +31,7 @@ class LocalNotificationServices {
       playSound: true,
       ongoing: true,
       autoCancel: false,
-      sound: UriAndroidNotificationSound("ringtones/incomingcall.mp3"),
+      // sound: UriAndroidNotificationSound("ringtones/incomingcall.mp3"),
       actions: [
         AndroidNotificationAction(
           'accept',
@@ -48,8 +49,8 @@ class LocalNotificationServices {
     var iOSPlatformChannelSpecifics = const DarwinNotificationDetails(
       badgeNumber: 0,
       presentSound: true,
-      // sound: 'slow_spring_board.aiff',
-      sound: 'incomingcall.mp3',
+      sound: 'bingbong.aiff',
+      // sound: 'incomingcall.mp3',
       categoryIdentifier: darwinNotificationCategoryText,
     );
     var notificationDetails = NotificationDetails(
@@ -66,12 +67,16 @@ class LocalNotificationServices {
   }
 
   Future<void> scheduleNotification() async {
-    // await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 5));
 
+    AudioPlayer player = AudioPlayer();
+    player.play(AssetSource('incomingcall.mp3'),
+        mode: PlayerMode.mediaPlayer, position: const Duration(seconds: 59));
     await showNotification();
 
     // Wait for 1 minute
     await Future.delayed(const Duration(minutes: 1));
+    player.stop();
 
     // Cancel the notification after 1 minute
     await flutterLocalNotificationsPlugin
