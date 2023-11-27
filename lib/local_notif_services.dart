@@ -35,7 +35,7 @@ class LocalNotificationServices {
             'accept',
             'Accept',
             titleColor: Colors.green,
-          ),
+          ), 
           AndroidNotificationAction(
             'decline',
             'Decline',
