@@ -113,7 +113,7 @@ Future<void> main() async {
       DarwinInitializationSettings(
     requestAlertPermission: true,
     requestBadgePermission: false,
-    requestSoundPermission: false,
+    requestSoundPermission: true,
     onDidReceiveLocalNotification:
         (int id, String? title, String? body, String? payload) async {
       didReceiveLocalNotificationStream.add(
@@ -153,8 +153,9 @@ Future<void> main() async {
 
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
-    onDidReceiveNotificationResponse:
-        (NotificationResponse notificationResponse,) async {
+    onDidReceiveNotificationResponse: (
+      NotificationResponse notificationResponse,
+    ) async {
       print("Hello here");
       onDidReceiveNotificationResponse(notificationResponse);
     },
@@ -190,7 +191,12 @@ class _TestAppState extends State<TestApp> {
             onPressed: () {
               LocalNotificationServices().scheduleNotification();
             },
-            child: const Text('Schedule Notification'),
+            child: const Text(
+              'Schedule Notification',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),
