@@ -1,6 +1,4 @@
-// ignore_for_file: unused_local_variable
-
-import 'dart:io';
+// ignore_for_file: unused_local_variable, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -10,29 +8,12 @@ class LocalNotificationServices {
       FlutterLocalNotificationsPlugin();
 
   void onDidReceiveLocalNotification(
-      int id, String? title, String? body, String? payload) async {}
-
-  initializeNotificationServices() {
-    if (Platform.isAndroid) {
-      flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.requestNotificationsPermission();
-    }
-
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    final DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings(
-            onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    const LinuxInitializationSettings initializationSettingsLinux =
-        LinuxInitializationSettings(defaultActionName: 'Open notification');
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin,
-      linux: initializationSettingsLinux,
-    );
+    int id,
+    String? title,
+    String? body,
+    String? payload,
+  ) async {
+    print("Payload: $payload");
   }
 
   showNotification() async {
@@ -59,7 +40,10 @@ class LocalNotificationServices {
             titleColor: Colors.red,
           )
         ]);
-    var iOSPlatformChannelSpecifics = const DarwinNotificationDetails();
+    var iOSPlatformChannelSpecifics = const DarwinNotificationDetails(
+      badgeNumber: 0,
+      presentSound: true,
+    );
     var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics,
@@ -71,5 +55,16 @@ class LocalNotificationServices {
       platformChannelSpecifics,
       payload: 'item x',
     );
+  }
+
+  Future<void> scheduleNotification() async {
+    await showNotification();
+
+    // Wait for 1 minute
+    await Future.delayed(const Duration(minutes: 1));
+
+    // Cancel the notification after 1 minute
+    await flutterLocalNotificationsPlugin
+        .cancel(0); // Cancel notification with ID 0
   }
 }
