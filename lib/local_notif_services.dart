@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable, avoid_print
 
+import 'package:callkit_test/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -13,23 +14,24 @@ class LocalNotificationServices {
     String? body,
     String? payload,
   ) async {
-    print("Payload: $payload");
+    print("Payload: $payload>>>>>>>>>>>>>>>> Call Accepted ");
   }
 
   showNotification() async {
     print("Showing Notification");
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-        '0', 'incoming_call',
-        channelDescription: 'For incoming calls',
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker',
-        enableVibration: true,
-        playSound: true,
-        ongoing: true,
-        autoCancel: false,
-        sound: RawResourceAndroidNotificationSound('slow_spring_board'),
-        actions: [
+    var androidPlatformChannelSpecifics =
+        const AndroidNotificationDetails('0', 'incoming_call',
+            channelDescription: 'For incoming calls',
+            importance: Importance.max,
+            priority: Priority.high,
+            ticker: 'ticker',
+            enableVibration: true,
+            playSound: true,
+            ongoing: true,
+            autoCancel: false,
+            // sound: RawResourceAndroidNotificationSound('slow_spring_board'),
+            sound: UriAndroidNotificationSound("ringtones/IncomingCall.mp3"),
+            actions: [
           AndroidNotificationAction(
             'accept',
             'Accept',
@@ -41,12 +43,14 @@ class LocalNotificationServices {
             titleColor: Colors.red,
           )
         ]);
+
     var iOSPlatformChannelSpecifics = const DarwinNotificationDetails(
       badgeNumber: 0,
       presentSound: true,
       sound: 'slow_spring_board.aiff',
+      categoryIdentifier: darwinNotificationCategoryText,
     );
-    var platformChannelSpecifics = NotificationDetails(
+    var notificationDetails = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics,
     );
@@ -54,12 +58,14 @@ class LocalNotificationServices {
       0,
       'Fake Incoming Call',
       'Call from Fake Caller',
-      platformChannelSpecifics,
+      notificationDetails,
       payload: 'item x',
     );
   }
 
   Future<void> scheduleNotification() async {
+    // await Future.delayed(const Duration(seconds: 5));
+
     await showNotification();
 
     // Wait for 1 minute

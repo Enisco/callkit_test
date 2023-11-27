@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 int id = 0;
-const String darwinNotificationCategoryPlain = 'plainCategory';
+const String darwinNotificationCategoryText = 'calls';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -54,7 +54,7 @@ void onDidReceiveNotificationResponse(
     NotificationResponse notificationResponse) async {
   final String? payload = notificationResponse.payload;
   if (notificationResponse.payload != null) {
-    debugPrint('notification payload: $payload');
+    debugPrint('notification payload: $payload >>>>>> Accepted');
   }
   // await Navigator.push(
   //   context,
@@ -82,22 +82,22 @@ Future<void> main() async {
   final List<DarwinNotificationCategory> darwinNotificationCategories =
       <DarwinNotificationCategory>[
     DarwinNotificationCategory(
-      "calls",
+      darwinNotificationCategoryText,
       actions: <DarwinNotificationAction>[
-        DarwinNotificationAction.text(
+        DarwinNotificationAction.plain(
           'accept',
           'Accept',
-          buttonTitle: 'Accept',
-          placeholder: "Placeholder",
+          // buttonTitle: 'Accept',
+          // placeholder: "Placeholder",
           options: <DarwinNotificationActionOption>{
             DarwinNotificationActionOption.foreground,
           },
         ),
-        DarwinNotificationAction.text(
+        DarwinNotificationAction.plain(
           'decline',
           'Decline',
-          buttonTitle: 'Decline',
-          placeholder: "Placeholder",
+          // buttonTitle: 'Decline',
+          // placeholder: "Placeholder",
           options: <DarwinNotificationActionOption>{
             DarwinNotificationActionOption.destructive,
           },
