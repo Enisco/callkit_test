@@ -28,7 +28,7 @@ class LocalNotificationServices {
         playSound: true,
         ongoing: true,
         autoCancel: false,
-        sound: RawResourceAndroidNotificationSound('slow_spring_board'),
+        // sound: RawResourceAndroidNotificationSound('slow_spring_board'),
         actions: [
           AndroidNotificationAction(
             'accept',
