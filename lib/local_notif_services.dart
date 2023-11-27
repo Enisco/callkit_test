@@ -30,7 +30,7 @@ class LocalNotificationServices {
       playSound: true,
       ongoing: true,
       autoCancel: false,
-      sound: UriAndroidNotificationSound("ringtones/IncomingCall.mp3"),
+      sound: UriAndroidNotificationSound("ringtones/incomingcall.mp3"),
       actions: [
         AndroidNotificationAction(
           'accept',
@@ -48,7 +48,8 @@ class LocalNotificationServices {
     var iOSPlatformChannelSpecifics = const DarwinNotificationDetails(
       badgeNumber: 0,
       presentSound: true,
-      sound: 'slow_spring_board.aiff',
+      // sound: 'slow_spring_board.aiff',
+      sound: 'incomingcall.mp3',
       categoryIdentifier: darwinNotificationCategoryText,
     );
     var notificationDetails = NotificationDetails(
